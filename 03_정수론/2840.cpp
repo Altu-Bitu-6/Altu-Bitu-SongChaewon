@@ -29,6 +29,10 @@ bool checkDuplicate(vector<char>& data) { // 중복된 글자 확인하는 함�
 }
 
 int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0); 
+    cout.tie(0);
+
     int n, k;
     cin >> n >> k;
 
