@@ -1,68 +1,64 @@
-#include<iostream>
-#include<algorithm>
-#include<vector>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
-// 함수의 용도: 행운의 바퀴를 시뮬레이션하여 결과를 출력
-void luckyWheel() {
-    int N, K;
-    cin >> N >> K;
-    
-    // 바퀴 초기화
-    vector<char> pan(N, '?');
-    
-    int index = 0;
-    
-    for (int i = 0; i < K; i++) {
-        int count; 
-        char tmpc;
-        cin >> count >> tmpc;
-        
-        // 처음 입력일 경우
-        if (i == 0) {
-            pan[0] = tmpc; 
-            index = 0; 
-            continue;
-        }
-        
-        // 바퀴를 돌리기
-        index = (count + index) % N;
-        
-        // 돌렸을 때 같은 문자(같은 자리)는 나올 수 있다.
-        // 그것마저 아니면 틀린 원판
-        if (pan[index] != '?' && pan[index] != tmpc) { 
-            cout << "!";
-            return;
-        } else {
-            pan[index] = tmpc;
-        }
-    }
-    
-    // 중복 체크
-    for (int i = 0; i < N; i++) {
-        for (int j = i + 1; j < N; j++) {
-            if (pan[i] != '?' && pan[i] == pan[j]) { 
-                cout << "!";
-                return;
-            }
-        }
-    }
-    
-    // 바퀴의 상태 출력
-    for (int i = 0; i < N; i++) {
-        cout << pan[index];
-        index--;
-        if (index == -1) index = N - 1;
+void rotateWheel(vector<char>& data, int& index, int num) { // 바퀴 돌리는 함수
+    index = (index + num) % data.size();
+}
+
+void printResult(vector<char>& data, int index) { // 결과 출력하는 함수
+    for (int i = 0; i < data.size(); ++i) {
+        cout << data[index];
+        index = (index - 1 + data.size()) % data.size();
     }
 }
 
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); 
-    cout.tie(0);
+bool checkDuplicate(vector<char>& data) { // 중복된 글자 확인하는 함수
+    for (int i = 0; i < data.size(); ++i) {
+        if (data[i] == '?') {
+            continue;
+        }
+        for (int j = i + 1; j < data.size(); ++j) {
+            if (data[i] == data[j]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
-    luckyWheel();
+int main() {
+    int n, k;
+    cin >> n >> k;
+
+    vector<char> data(n, '?');
+    int index = 0;
+    bool check = true;
+
+    for (int i = 0; i < k; ++i) {
+        int num;
+        char alphabet;
+        
+        cin >> num >> alphabet;
+
+        rotateWheel(data, index, num);
+
+        if (data[index] != '?') {
+            if (data[index] == alphabet) {
+                continue;
+            }
+            check = false;
+        } else {
+            data[index] = alphabet;
+        }
+    }
+
+    if (check && !checkDuplicate(data)) {
+        printResult(data, index);
+    } else {
+        cout << '!';
+    }
 
     return 0;
 }
