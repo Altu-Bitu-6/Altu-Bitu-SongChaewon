@@ -1,40 +1,45 @@
 #include <iostream>
-#include <queue>
+#include <set>
+#include <algorithm>
+#include <vector>
 
 using namespace std;
 
-void christmasGifts(int n) {
-    priority_queue<int> pq;
-    
-    for (int i = 0; i < n; i++) {
-        int m;
-        cin >> m; 
-        
-        if (m == 0) { // 선물을 꺼내는 경우
-            if (pq.empty()) {
-                cout << -1 << '\n'; // 선물이 없는 경우 -1 출력
-            } else {
-                cout << pq.top() << '\n'; // 가장 큰 선물 출력
-                pq.pop(); // 가장 큰 선물 제거
-            }
-        } else {
-            for (int j = 0; j < m; j++) {
-                int gift;
-                cin >> gift; // 선물의 가격 입력받기
-                pq.push(gift); // 선물 큐에 추가
-            }
+int similar(const vector<string>& words) {
+    int count = 0;
+
+    multiset<char> baseSet(words[0].begin(), words[0].end()); // 첫 번째 단어의 문자로 이루어진 multiset 생성
+
+    for (int i = 1; i < words.size(); ++i) {
+        multiset<char> currentSet(words[i].begin(), words[i].end()); // i번째 단어의 문자로 이루어진 multiset 생성
+
+        multiset<char> diffSet1, diffSet2; 
+        set_difference(baseSet.begin(), baseSet.end(), currentSet.begin(), currentSet.end(), inserter(diffSet1, diffSet1.begin()));
+        set_difference(currentSet.begin(), currentSet.end(), baseSet.begin(), baseSet.end(), inserter(diffSet2, diffSet2.begin()));
+
+        if (diffSet1.size() <= 1 && diffSet2.size() <= 1) {
+            ++count;
         }
     }
+
+    return count;
 }
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    
-    int n;
-    cin >> n; 
-    
-    christmasGifts(n);
-    
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N;
+    cin >> N;
+
+    vector<string> words(N);
+    for (int i = 0; i < N; ++i) {
+        cin >> words[i];
+    }
+
+    int similarWords = similar(words); 
+
+    cout << similarWords << '\n';
+
     return 0;
 }
