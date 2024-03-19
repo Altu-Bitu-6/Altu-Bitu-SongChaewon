@@ -3,6 +3,7 @@
     "sstream": "cpp",
     "iostream": "cpp",
     "queue": "cpp",
-    "set": "cpp"
+    "set": "cpp",
+    "vector": "cpp"
   }
 }
